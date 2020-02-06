@@ -15,7 +15,11 @@
     function startup() {
         goToAddress = Settings.getValue("goToDecentral", "");
         if (goToAddress == "") {
-            goToAddressNow = [];
+            var initialGoToList = "http://metaverse.darlingvr.net:8081/goto.json";
+            Menu.addMenuItem("GoTo > Unsubscribe from GoTo provider", initialGoToList);
+            goToAddressNow = [
+                initialGoToList
+            ];
             Settings.setValue("goToDecentral", goToAddressNow);
         }
         ui = new AppUi({
@@ -92,7 +96,7 @@
         if (menuItem == "Subscribe to new GoTo provider") {
             goToAddress = Settings.getValue("goToDecentral", "");
             var arrayLength = goToAddress.length;
-            var prom = Window.prompt("Enter URL to GoTo Jason.", "");
+            var prom = Window.prompt("Enter the URL to the GoTo database JSON.", "");
             if (prom) {
                 goToAddress[arrayLength] = prom;
                 Settings.setValue("goToDecentral", goToAddress);
