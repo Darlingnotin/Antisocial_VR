@@ -88,7 +88,7 @@
             };
 
             tablet.emitScriptEvent(JSON.stringify(readyEvent));
-            
+
         }
     }
 
@@ -96,7 +96,7 @@
         if (menuItem == "Subscribe to new GoTo provider") {
             goToAddress = Settings.getValue("goToDecentral", "");
             var arrayLength = goToAddress.length;
-            var prom = Window.prompt("Enter the URL to the GoTo database JSON.", "");
+            var prom = Window.prompt("Enter URL to GoTo Jason.", "");
             if (prom) {
                 goToAddress[arrayLength] = prom;
                 Settings.setValue("goToDecentral", goToAddress);
