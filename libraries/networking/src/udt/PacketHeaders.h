@@ -275,7 +275,6 @@ enum class EntityVersion : PacketVersion {
     ShadowBiasAndDistance,
     TextEntityFonts,
     ScriptServerKinematicMotion,
-    ZoneOcclusion,
 
     // Add new versions above here
     NUM_PACKET_TYPE,

@@ -71,11 +71,6 @@ void ZoneEntityRenderer::onRemoveFromSceneTyped(const TypedEntityPointer& entity
 }
 
 void ZoneEntityRenderer::doRender(RenderArgs* args) {
-    // This is necessary so that zones can themselves be zone culled
-    if (!passesZoneOcclusionTest(CullTest::_prevContainingZones)) {
-        return;
-    }
-
     if (!_stage) {
         _stage = args->_scene->getStage<LightStage>();
         assert(_stage);
@@ -185,8 +180,6 @@ void ZoneEntityRenderer::doRender(RenderArgs* args) {
             _bloomStage->_currentFrame.pushBloom(_bloomIndex);
         }
     }
-
-    CullTest::_containingZones.insert(_entityID);
 }
 
 void ZoneEntityRenderer::doRenderUpdateSynchronousTyped(const ScenePointer& scene, Transaction& transaction, const TypedEntityPointer& entity) {
