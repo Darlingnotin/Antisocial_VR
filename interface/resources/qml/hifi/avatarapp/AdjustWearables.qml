@@ -245,7 +245,9 @@ Rectangle {
                     linkColor: hifi.colors.blueHighlight
                     Layout.alignment: Qt.AlignVCenter
                     onLinkActivated: {
-                        popup.showGetWearables(null, function(link) {
+                        popup.showGetWearables(function() {
+                            emitSendToScript({'method' : 'navigate', 'url' : 'hifi://AvatarIsland/11.5848,-8.10862,-2.80195'})
+                        }, function(link) {
                             emitSendToScript({'method' : 'navigate', 'url' : link})
                         });
                     }

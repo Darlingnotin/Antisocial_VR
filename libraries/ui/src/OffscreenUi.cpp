@@ -33,20 +33,13 @@
 #include "MainWindow.h"
 
 /**jsdoc
- * The <code>OffscreenFlags</code> API enables gamepad joystick navigation of UI.
- *
- * <p><em>This API currently has no effect and is not used.</em></p>
- *
  * @namespace OffscreenFlags
  * 
  * @hifi-interface
  * @hifi-client-entity
  * @hifi-avatar
- *
- * @property {boolean} navigationFocused - <code>true</code> if UI has joystick navigation focus, <code>false</code> if it 
- *     doesn't.
- * @property {boolean} navigationFocusDisabled - <code>true</code> if UI joystick navigation focus is disabled, 
- *     <code>false</code> if it isn't.
+ * @property {boolean} navigationFocused
+ * @property {boolean} navigationFocusDisabled
  */
 
 // Needs to match the constants in resources/qml/Global.js
@@ -79,14 +72,12 @@ public:
 signals:
 
     /**jsdoc
-     * Triggered when the value of the <code>navigationFocused</code> property changes.
      * @function OffscreenFlags.navigationFocusedChanged
      * @returns {Signal}
      */
     void navigationFocusedChanged();
 
     /**jsdoc
-     * Triggered when the value of the <code>navigationFocusDisabled</code> property changes.
      * @function OffscreenFlags.navigationFocusDisabledChanged
      * @returns {Signal}
      */

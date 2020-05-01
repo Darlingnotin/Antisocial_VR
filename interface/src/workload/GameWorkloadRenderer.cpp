@@ -16,7 +16,6 @@
 #include <GeometryCache.h>
 #include <shaders/Shaders.h>
 
-#include "SelectedWorkloadRenderer.h"
 
 void GameSpaceToRender::configure(const Config& config) {
     _freezeViews = config.freezeViews;

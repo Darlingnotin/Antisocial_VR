@@ -82,7 +82,9 @@ function calcSpawnInfo(hand, landscape) {
 cleanUpOldMaterialEntities = function() {
     var avatarEntityData = MyAvatar.getAvatarEntityData();
     for (var entityID in avatarEntityData) {
-        if (avatarEntityData[entityID].name === TABLET_MATERIAL_ENTITY_NAME) {
+        var entityName = Entities.getEntityProperties(entityID, ["name"]).name;
+
+        if (entityName === TABLET_MATERIAL_ENTITY_NAME) {
             Entities.deleteEntity(entityID);
         }
     }

@@ -480,11 +480,17 @@ QUuid EntityScriptingInterface::addEntityInternal(const EntityItemProperties& pr
 
     _activityTracking.addedEntityCount++;
 
+    auto nodeList = DependencyManager::get<NodeList>();
+    auto sessionID = nodeList->getSessionUUID();
+
     EntityItemProperties propertiesWithSimID = properties;
     propertiesWithSimID.setEntityHostType(entityHostType);
     if (entityHostType == entity::HostType::AVATAR) {
-        // only allow adding our own avatar entities from script
-        propertiesWithSimID.setOwningAvatarID(AVATAR_SELF_ID);
+        if (sessionID.isNull()) {
+            // null sessionID is unacceptable in this case
+            sessionID = AVATAR_SELF_ID;
+        }
+        propertiesWithSimID.setOwningAvatarID(sessionID);
     } else if (entityHostType == entity::HostType::LOCAL) {
         // For now, local entities are always collisionless
         // TODO: create a separate, local physics simulation that just handles local entities (and MyAvatar?)
@@ -492,8 +498,6 @@ QUuid EntityScriptingInterface::addEntityInternal(const EntityItemProperties& pr
     }
 
     // the created time will be set in EntityTree::addEntity by recordCreationTime()
-    auto nodeList = DependencyManager::get<NodeList>();
-    auto sessionID = nodeList->getSessionUUID();
     propertiesWithSimID.setLastEditedBy(sessionID);
 
     bool scalesWithParent = propertiesWithSimID.getScalesWithParent();
@@ -801,7 +805,7 @@ QUuid EntityScriptingInterface::editEntity(const QUuid& id, const EntityItemProp
             return;
         }
 
-        if (entity->isAvatarEntity() && !entity->isMyAvatarEntity()) {
+        if (entity->isAvatarEntity() && entity->getOwningAvatarID() != sessionID && entity->getOwningAvatarID() != AVATAR_SELF_ID) {
             // don't edit other avatar's avatarEntities
             properties = EntityItemProperties();
             return;
@@ -821,7 +825,7 @@ QUuid EntityScriptingInterface::editEntity(const QUuid& id, const EntityItemProp
                 // flag for simulation ownership, or upgrade existing ownership priority
                 // (actual bids for simulation ownership are sent by the PhysicalEntitySimulation)
                 entity->upgradeScriptSimulationPriority(properties.computeSimulationBidPriority());
-                if (entity->isLocalEntity() || entity->isMyAvatarEntity() || simulationOwner.getID() == sessionID) {
+                if (simulationOwner.getID() == sessionID) {
                     // we own the simulation --> copy ALL restricted properties
                     properties.copySimulationRestrictedProperties(entity);
                 } else {
@@ -966,43 +970,43 @@ void EntityScriptingInterface::deleteEntity(const QUuid& id) {
 
     _activityTracking.deletedEntityCount++;
 
-    if (!_entityTree) {
-        return;
-    }
-
     EntityItemID entityID(id);
+    bool shouldSendDeleteToServer = true;
 
     // If we have a local entity tree set, then also update it.
-    std::vector<EntityItemPointer> entitiesToDeleteImmediately;
-    _entityTree->withWriteLock([&] {
-        EntityItemPointer entity = _entityTree->findEntityByEntityItemID(entityID);
-        if (entity) {
-            if (entity->isAvatarEntity() && !entity->isMyAvatarEntity()) {
-                // don't delete other avatar's avatarEntities
-                return;
-            }
-            if (entity->getLocked()) {
-                return;
-            }
+    if (_entityTree) {
+        _entityTree->withWriteLock([&] {
+            EntityItemPointer entity = _entityTree->findEntityByEntityItemID(entityID);
+            if (entity) {
 
-            // Deleting an entity has consequences for linked children: some can be deleted but others can't.
-            // Local- and my-avatar-entities can be deleted immediately, but other-avatar-entities can't be deleted
-            // by this context, and a domain-entity must rountrip through the entity-server for authorization.
-            if (entity->isDomainEntity()) {
-                getEntityPacketSender()->queueEraseEntityMessage(id);
-            } else {
-                entitiesToDeleteImmediately.push_back(entity);
-                const auto sessionID = DependencyManager::get<NodeList>()->getSessionUUID();
-                entity->collectChildrenForDelete(entitiesToDeleteImmediately, sessionID);
-                _entityTree->deleteEntitiesByPointer(entitiesToDeleteImmediately);
-            }
-        }
-    });
+                auto nodeList = DependencyManager::get<NodeList>();
+                const QUuid myNodeID = nodeList->getSessionUUID();
+                if (entity->isAvatarEntity() && entity->getOwningAvatarID() != myNodeID) {
+                    // don't delete other avatar's avatarEntities
+                    shouldSendDeleteToServer = false;
+                    return;
+                }
 
-    for (auto entity : entitiesToDeleteImmediately) {
-        if (entity->isMyAvatarEntity()) {
-            getEntityPacketSender()->getMyAvatar()->clearAvatarEntity(entity->getID(), false);
-        }
+                if (entity->getLocked()) {
+                    shouldSendDeleteToServer = false;
+                } else {
+                    // only delete local entities, server entities will round trip through the server filters
+                    if (!entity->isDomainEntity() || _entityTree->isServerlessMode()) {
+                        shouldSendDeleteToServer = false;
+                        _entityTree->deleteEntity(entityID);
+
+                        if (entity->isAvatarEntity() && getEntityPacketSender()->getMyAvatar()) {
+                            getEntityPacketSender()->getMyAvatar()->clearAvatarEntity(entityID, false);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // if at this point, we know the id, and we should still delete the entity, send the update to the entity server
+    if (shouldSendDeleteToServer) {
+        getEntityPacketSender()->queueEraseEntityMessage(entityID);
     }
 }
 
@@ -1649,9 +1653,12 @@ bool EntityScriptingInterface::actionWorker(const QUuid& entityID,
         return false;
     }
 
+    auto nodeList = DependencyManager::get<NodeList>();
+    const QUuid myNodeID = nodeList->getSessionUUID();
+
     EntityItemPointer entity;
     bool doTransmit = false;
-    _entityTree->withWriteLock([this, &entity, entityID, &doTransmit, actor] {
+    _entityTree->withWriteLock([this, &entity, entityID, myNodeID, &doTransmit, actor] {
         EntitySimulationPointer simulation = _entityTree->getSimulation();
         entity = _entityTree->findEntityByEntityItemID(entityID);
         if (!entity) {
@@ -1664,7 +1671,7 @@ bool EntityScriptingInterface::actionWorker(const QUuid& entityID,
             return;
         }
 
-        if (entity->isAvatarEntity() && !entity->isMyAvatarEntity()) {
+        if (entity->isAvatarEntity() && entity->getOwningAvatarID() != myNodeID) {
             return;
         }
 

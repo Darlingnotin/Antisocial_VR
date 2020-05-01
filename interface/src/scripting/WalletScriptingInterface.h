@@ -145,8 +145,7 @@ signals:
 
     /**jsdoc
      * Triggered when a certified avatar entity's ownership check requested via 
-     * {@link WalletScriptingInterface.proveAvatarEntityOwnershipVerification|proveAvatarEntityOwnershipVerification} or 
-     * {@link ContextOverlay.requestOwnershipVerification} succeeds. 
+     * {@link WalletScriptingInterface.proveAvatarEntityOwnershipVerification|proveAvatarEntityOwnershipVerification} succeeds. 
      * @function WalletScriptingInterface.ownershipVerificationSuccess
      * @param {Uuid} entityID - The ID of the avatar entity checked.
      * @returns {Signal}
@@ -155,8 +154,7 @@ signals:
 
     /**jsdoc
      * Triggered when a certified avatar entity's ownership check requested via
-     * {@link WalletScriptingInterface.proveAvatarEntityOwnershipVerification|proveAvatarEntityOwnershipVerification} or
-     * {@link ContextOverlay.requestOwnershipVerification} fails.
+     * {@link WalletScriptingInterface.proveAvatarEntityOwnershipVerification|proveAvatarEntityOwnershipVerification} fails.
      * @function WalletScriptingInterface.ownershipVerificationFailed
      * @param {Uuid} entityID - The ID of the avatar entity checked.
      * @returns {Signal}

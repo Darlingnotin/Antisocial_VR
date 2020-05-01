@@ -87,6 +87,7 @@ public:
  * </ul>
  *
  * @class ScriptsModel
+
  * @hideconstructor
  *
  * @hifi-interface

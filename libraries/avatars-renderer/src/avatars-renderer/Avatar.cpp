@@ -333,22 +333,18 @@ void Avatar::setTargetScale(float targetScale) {
 }
 
 void Avatar::removeAvatarEntitiesFromTree() {
-    if (_packedAvatarEntityData.empty()) {
-        return;
-    }
     auto treeRenderer = DependencyManager::get<EntityTreeRenderer>();
     EntityTreePointer entityTree = treeRenderer ? treeRenderer->getTree() : nullptr;
     if (entityTree) {
-        std::vector<EntityItemID> ids;
-        ids.reserve(_packedAvatarEntityData.size());
-        PackedAvatarEntityMap::const_iterator itr = _packedAvatarEntityData.constBegin();
-        while (itr != _packedAvatarEntityData.constEnd()) {
-            ids.push_back(itr.key());
-            ++itr;
-        }
-        bool force = true;
-        bool ignoreWarnings = true;
-        entityTree->deleteEntitiesByID(ids, force, ignoreWarnings); // locks tree
+        QList<QUuid> avatarEntityIDs;
+        _avatarEntitiesLock.withReadLock([&] {
+            avatarEntityIDs = _packedAvatarEntityData.keys();
+        });
+        entityTree->withWriteLock([&] {
+            for (const auto& entityID : avatarEntityIDs) {
+                entityTree->deleteEntity(entityID, true, true);
+            }
+        });
     }
 }
 
@@ -943,7 +939,7 @@ void Avatar::simulateAttachments(float deltaTime) {
         bool texturesLoaded = _attachmentModelsTexturesLoaded.at(i);
 
         // Watch for texture loading
-        if (!texturesLoaded && model->getNetworkModel() && model->getNetworkModel()->areTexturesLoaded()) {
+        if (!texturesLoaded && model->getGeometry() && model->getGeometry()->areTexturesLoaded()) {
             _attachmentModelsTexturesLoaded[i] = true;
             model->updateRenderItems();
         }
@@ -1920,13 +1916,6 @@ void Avatar::setParentJointIndex(quint16 parentJointIndex) {
     }
 }
 
-/**jsdoc
- * Information about a joint in an avatar's skeleton hierarchy.
- * @typedef {object} SkeletonJoint
- * @property {string} name - Joint name.
- * @property {number} index - Joint index.
- * @property {number} parentIndex - Index of this joint's parent (-1 if no parent).
- */
 QList<QVariant> Avatar::getSkeleton() {
     SkeletonModelPointer skeletonModel = _skeletonModel;
     if (skeletonModel) {

@@ -9,7 +9,6 @@
 //
 #include "GameWorkload.h"
 #include "GameWorkloadRenderer.h"
-#include "SelectedWorkloadRenderer.h"
 #include <ViewFrustum.h>
 #include <workload/RegionTracker.h>
 #include <workload/SpaceClassifier.h>
@@ -36,7 +35,6 @@ public:
         model.addJob<PhysicsBoundary>("PhysicsBoundary", regionTrackerOut);
 
         model.addJob<GameSpaceToRender>("SpaceToRender");
-        model.addJob<SelectedWorkloadRenderer>("SelectedWorkloadRender");
 
         out = regionTrackerOut;
     }

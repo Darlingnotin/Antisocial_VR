@@ -26,7 +26,6 @@ get_filename_component(COMPILER_ROOT "${CMAKE_C_COMPILER}" DIRECTORY)
 message("CMAKE_C_COMPILER=${CMAKE_C_COMPILER}")
 message("COMPILER_ROOT=${COMPILER_ROOT}")
 message("CMAKE_SYSROOT=${CMAKE_SYSROOT}")
-message("CMAKE_OSX_SYSROOT=${CMAKE_OSX_SYSROOT}")
 message("CMAKE_C_FLAGS=${CMAKE_C_FLAGS}")
 message("CMAKE_C_FLAGS_RELEASE=${CMAKE_C_FLAGS_RELEASE}")
 message("CMAKE_C_FLAGS_DEBUG=${CMAKE_C_FLAGS_DEBUG}")
@@ -44,8 +43,6 @@ if(CMAKE_C_COMPILER_EXTERNAL_TOOLCHAIN)
 endif()
 if(CMAKE_SYSROOT AND CMAKE_C_COMPILE_OPTIONS_SYSROOT)
     set(CFLAGS "${CFLAGS} ${CMAKE_C_COMPILE_OPTIONS_SYSROOT}${CMAKE_SYSROOT}")
-elseif(CMAKE_OSX_SYSROOT AND CMAKE_C_COMPILE_OPTIONS_SYSROOT)
-    set(CFLAGS "${CFLAGS} ${CMAKE_C_COMPILE_OPTIONS_SYSROOT}${CMAKE_OSX_SYSROOT}")
 endif()
 
 string(REGEX REPLACE "^ " "" CFLAGS "${CFLAGS}")
@@ -76,27 +73,9 @@ file(WRITE "${BUILDDIR}/Configure" "${_contents}")
 
 if(BUILD_SHARED_LIBS)
     set(SHARED shared)
-    file(STRINGS "${BUILDDIR}/crypto/opensslv.h" SHLIB_VERSION
-        REGEX "^#[\t ]*define[\t ]+SHLIB_VERSION_NUMBER[\t ]+\".*\".*")
-    string(REGEX REPLACE "^.*SHLIB_VERSION_NUMBER[\t ]+\"([^\"]*)\".*$" "\\1"
-        SHLIB_VERSION "${SHLIB_VERSION}")
-    if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-        set(LIB_EXT dylib)
-        set(LIB_EXTS ${SHLIB_VERSION}.${LIB_EXT})
-    else()
-        set(LIB_EXT so)
-        set(LIB_EXTS ${LIB_EXT}.${SHLIB_VERSION})
-    endif()
-    list(APPEND LIB_EXTS ${LIB_EXT})
 else()
     set(SHARED no-shared)
-    set(LIB_EXTS a)
 endif()
-foreach(lib ssl crypto)
-    foreach(ext ${LIB_EXTS})
-        list(APPEND INSTALL_LIBS "${BUILDDIR}/lib${lib}.${ext}")
-    endforeach()
-endforeach()
 
 if(CMAKE_HOST_WIN32)
     set(ENV_COMMAND set)
@@ -148,10 +127,10 @@ add_custom_target(build_libs ALL
     VERBATIM
     WORKING_DIRECTORY "${BUILDDIR}"
     DEPENDS depend
-    BYPRODUCTS ${INSTALL_LIBS}
+    BYPRODUCTS "${BUILDDIR}/libssl.a" "${BUILDDIR}/libcrypto.a"
 )
 
 install(
-    FILES ${INSTALL_LIBS}
+    FILES "${BUILDDIR}/libssl.a" "${BUILDDIR}/libcrypto.a"
     DESTINATION lib
 )

@@ -36,7 +36,6 @@ class ScriptingInterface;
  * types.<p>
  *
  * @class RouteObject
- * @hideconstructor
  *
  * @hifi-interface
  * @hifi-client-entity

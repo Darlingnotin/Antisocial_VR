@@ -118,7 +118,6 @@ public:
     void setProxyWindow(const EntityItemID& id, QWindow* proxyWindow);
     void setCollisionSound(const EntityItemID& id, const SharedSoundPointer& sound);
     EntityItemPointer getEntity(const EntityItemID& id);
-    void deleteEntity(const EntityItemID& id) const;
     void onEntityChanged(const EntityItemID& id);
 
     // Access the workload Space
@@ -230,7 +229,7 @@ private:
 
     class LayeredZones : public std::vector<LayeredZone> {
     public:
-        bool clearDomainAndNonOwnedZones();
+        bool clearDomainAndNonOwnedZones(const QUuid& sessionUUID);
 
         void sort() { std::sort(begin(), end(), std::less<LayeredZone>()); }
         bool equals(const LayeredZones& other) const;

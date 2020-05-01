@@ -330,7 +330,6 @@ protected:
     glm::vec3 _lastForward;
     glm::vec3 _lastPosition;
     glm::vec3 _lastVelocity;
-    bool _isMovingWithMomentum{ false };
 
     QUrl _animGraphURL;
     std::shared_ptr<AnimNode> _animNode;

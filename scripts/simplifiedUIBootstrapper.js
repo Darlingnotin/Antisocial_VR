@@ -17,8 +17,7 @@ var currentlyRunningScripts = ScriptDiscoveryService.getRunning();
 
 var DEFAULT_SCRIPTS_SEPARATE = [
     "system/controllers/controllerScripts.js",
-    "simplifiedUI/ui/simplifiedUI.js",
-    "simplifiedUI/clickToZoom/clickToZoom.js"
+    "simplifiedUI/ui/simplifiedUI.js"
 ];
 function loadSeparateDefaults() {
     for (var i = 0; i < DEFAULT_SCRIPTS_SEPARATE.length; i++) {

@@ -243,10 +243,7 @@ bool AddressManager::handleUrl(const QUrl& lookupUrlIn, LookupTrigger trigger) {
 
     QUrl lookupUrl = lookupUrlIn;
 
-    if (!lookupUrl.host().isEmpty() && !lookupUrl.path().isEmpty()) {
-        // Assignment clients ping for empty url until assigned. Don't spam.
-        qCDebug(networking) << "Trying to go to URL" << lookupUrl.toString();
-    }
+    qCDebug(networking) << "Trying to go to URL" << lookupUrl.toString();
 
     if (lookupUrl.scheme().isEmpty() && !lookupUrl.path().startsWith("/")) {
         // 'urls' without schemes are taken as domain names, as opposed to

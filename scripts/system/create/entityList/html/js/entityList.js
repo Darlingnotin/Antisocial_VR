@@ -209,6 +209,7 @@ let elEntityTable,
     elFilterInView,
     elFilterRadius,
     elExport,
+    elPal,
     elSelectedEntitiesCount,
     elVisibleEntitiesCount,
     elNoEntitiesMessage,
@@ -253,6 +254,7 @@ function loaded() {
         elFilterInView = document.getElementById("filter-in-view");
         elFilterRadius = document.getElementById("filter-radius");
         elExport = document.getElementById("export");
+        elPal = document.getElementById("pal");
         elSelectedEntitiesCount = document.getElementById("selected-entities-count");
         elVisibleEntitiesCount = document.getElementById("visible-entities-count");
         elNoEntitiesMessage = document.getElementById("no-entities");
@@ -269,6 +271,9 @@ function loaded() {
         };
         elExport.onclick = function() {
             EventBridge.emitWebEvent(JSON.stringify({ type: 'export'}));
+        };
+        elPal.onclick = function() {
+            EventBridge.emitWebEvent(JSON.stringify({ type: 'pal' }));
         };
         elDelete.onclick = function() {
             EventBridge.emitWebEvent(JSON.stringify({ type: 'delete' }));
@@ -536,9 +541,8 @@ function loaded() {
         function onRowClicked(clickEvent) {
             let entityID = this.dataset.entityID;
             let selection = [entityID];
-            let controlKey = window.navigator.platform.startsWith("Mac") ? clickEvent.metaKey : clickEvent.ctrlKey;
 
-            if (controlKey) {
+            if (clickEvent.ctrlKey) {
                 let selectedIndex = selectedEntities.indexOf(entityID);
                 if (selectedIndex >= 0) {
                     selection = [];
@@ -569,7 +573,7 @@ function loaded() {
                         selection.reverse();
                     }
                 }
-            } else if (!controlKey && !clickEvent.shiftKey && selectedEntities.length === 1) {
+            } else if (!clickEvent.ctrlKey && !clickEvent.shiftKey && selectedEntities.length === 1) {
                 // if reselecting the same entity then start renaming it
                 if (selectedEntities[0] === entityID) {
                     if (renameLastBlur && renameLastEntityID === entityID && (Date.now() - renameLastBlur) < RENAME_COOLDOWN) {

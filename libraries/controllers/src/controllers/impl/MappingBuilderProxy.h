@@ -54,7 +54,6 @@ class UserInputMapper;
  * </ul>
  *
  * @class MappingObject
- * @hideconstructor
  *
  * @hifi-interface
  * @hifi-client-entity

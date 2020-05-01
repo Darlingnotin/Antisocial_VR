@@ -31,16 +31,14 @@
 class JSONCallbackParameters {
 public:
     JSONCallbackParameters(QObject* callbackReceiver = nullptr,
-        const QString& jsonCallbackMethod = QString(),
-        const QString& errorCallbackMethod = QString(),
-        const QJsonObject& callbackData = QJsonObject());
+                           const QString& jsonCallbackMethod = QString(),
+                           const QString& errorCallbackMethod = QString());
 
     bool isEmpty() const { return !callbackReceiver; }
 
     QObject* callbackReceiver;
     QString jsonCallbackMethod;
     QString errorCallbackMethod;
-    QJsonObject callbackData;
 };
 
 namespace AccountManagerAuth {

@@ -23,7 +23,6 @@ class QScriptEngine;
  * Information about an animation resource, created by {@link AnimationCache.getAnimation}.
  *
  * @class AnimationObject
- * @hideconstructor
  *
  * @hifi-interface
  * @hifi-client-entity
@@ -58,10 +57,9 @@ public:
 };
 
 /**jsdoc
- * Joint rotations in one frame of an {@link AnimationObject}.
+ * Joint rotations in one frame of an animation.
  *
  * @class AnimationFrameObject
- * @hideconstructor
  *
  * @hifi-interface
  * @hifi-client-entity

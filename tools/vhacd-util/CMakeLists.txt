@@ -4,7 +4,11 @@ link_hifi_libraries(shared fbx hfm graphics gpu gl)
 
 include_hifi_library_headers(image)
 
-target_vhacd()
+add_dependency_external_projects(vhacd)
+
+find_package(VHACD REQUIRED)
+target_include_directories(${TARGET_NAME} PUBLIC ${VHACD_INCLUDE_DIRS})
+target_link_libraries(${TARGET_NAME} ${VHACD_LIBRARIES})
 
 setup_memory_debugger()
 

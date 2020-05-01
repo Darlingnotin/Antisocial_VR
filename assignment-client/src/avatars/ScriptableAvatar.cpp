@@ -144,10 +144,10 @@ void ScriptableAvatar::update(float deltatime) {
             }
             _animationDetails.currentFrame = currentFrame;
 
-            const std::vector<HFMJoint>& modelJoints = _bind->getHFMModel().joints;
+            const QVector<HFMJoint>& modelJoints = _bind->getHFMModel().joints;
             QStringList animationJointNames = _animation->getJointNames();
 
-            const auto nJoints = (int)modelJoints.size();
+            const int nJoints = modelJoints.size();
             if (_jointData.size() != nJoints) {
                 _jointData.resize(nJoints);
             }
@@ -280,17 +280,6 @@ void ScriptableAvatar::setJointMappingsFromNetworkReply() {
 }
 
 AvatarEntityMap ScriptableAvatar::getAvatarEntityData() const {
-    auto data = getAvatarEntityDataInternal(true);
-    return data;
-}
-
-AvatarEntityMap ScriptableAvatar::getAvatarEntityDataNonDefault() const {
-    auto data = getAvatarEntityDataInternal(false);
-    return data;
-
-}
-
-AvatarEntityMap ScriptableAvatar::getAvatarEntityDataInternal(bool allProperties) const {
     // DANGER: Now that we store the AvatarEntityData in packed format this call is potentially Very Expensive!
     // Avoid calling this method if possible.
     AvatarEntityMap data;
@@ -299,18 +288,9 @@ AvatarEntityMap ScriptableAvatar::getAvatarEntityDataInternal(bool allProperties
         for (const auto& itr : _entities) {
             QUuid id = itr.first;
             EntityItemPointer entity = itr.second;
-
-            EncodeBitstreamParams params;
-            auto desiredProperties = entity->getEntityProperties(params);
-            desiredProperties += PROP_LOCAL_POSITION;
-            desiredProperties += PROP_LOCAL_ROTATION;
-            desiredProperties += PROP_LOCAL_VELOCITY;
-            desiredProperties += PROP_LOCAL_ANGULAR_VELOCITY;
-            desiredProperties += PROP_LOCAL_DIMENSIONS;
-            EntityItemProperties properties = entity->getProperties(desiredProperties);
-
+            EntityItemProperties properties = entity->getProperties();
             QByteArray blob;
-            EntityItemProperties::propertiesToBlob(_scriptEngine, sessionID, properties, blob, allProperties);
+            EntityItemProperties::propertiesToBlob(_scriptEngine, sessionID, properties, blob);
             data[id] = blob;
         }
     });
