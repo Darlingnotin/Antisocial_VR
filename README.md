@@ -1,4 +1,4 @@
-# DarlingVR VR
+# DarlingVR
 
 #### v0.86.0 K1 (12/3/19)
 
