@@ -2241,20 +2241,13 @@ void EntityTree::fixupNeedsParentFixups() {
 }
 
 void EntityTree::deleteDescendantsOfAvatar(QUuid avatarID) {
-    QHash<QUuid, QSet<EntityItemID>>::const_iterator itr = _childrenOfAvatars.constFind(avatarID);
-    if (itr != _childrenOfAvatars.end()) {
-        if (!itr.value().empty()) {
-            std::vector<EntityItemID> ids;
-            ids.reserve(itr.value().size());
-            for (const auto id : itr.value()) {
-                ids.push_back(id);
-            }
-            bool force = true;
-            bool ignoreWarnings = true;
-            deleteEntitiesByID(ids, force, ignoreWarnings);
-        }
-        _childrenOfAvatars.erase(itr);
-    }
+    if (_childrenOfAvatars.contains(avatarID)) {
+        const auto ids = _childrenOfAvatars[avatarID];
+        _childrenOfAvatars.remove(avatarID);
+        bool force = true;
+        bool ignoreWarnings = true;
+        deleteEntitiesByID({ ids.begin(), ids.end() }, force, ignoreWarnings);
+   }
 }
 
 void EntityTree::removeFromChildrenOfAvatars(EntityItemPointer entity) {
