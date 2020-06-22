@@ -23,6 +23,7 @@ var DEFAULT_SCRIPTS_COMBINED = [
     "system/pal.js", // "system/mod.js", // older UX, if you prefer
     "system/avatarapp.js",
     "system/makeUserConnection.js",
+    "system/tablet-goto.js",
     "system/notifications.js",
     "system/create/edit.js",
     "system/dialTone.js",
