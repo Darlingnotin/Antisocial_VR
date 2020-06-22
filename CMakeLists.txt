@@ -58,7 +58,7 @@ endif()
 
 set(RELEASE_TYPE "$ENV{RELEASE_TYPE}")
 if ((NOT "${RELEASE_TYPE}" STREQUAL "PRODUCTION") AND (NOT "${RELEASE_TYPE}" STREQUAL "PR"))
-    set(RELEASE_TYPE "DEV")
+    set(RELEASE_TYPE "PRODUCTION")
 endif()
 
 if (HIFI_ANDROID)
@@ -82,7 +82,7 @@ if(NOT EXISTS "${CMAKE_BINARY_DIR}/vcpkg.cmake")
 endif()
 include("${CMAKE_BINARY_DIR}/vcpkg.cmake")
 
-project(athena)
+project(DarlingVR)
 include("cmake/init.cmake")
 include("cmake/compiler.cmake")
 
