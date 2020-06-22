@@ -25,8 +25,8 @@ namespace NetworkingConstants {
     // if you manually generate a personal access token for the domains scope
     // at https://staging.highfidelity.com/user/tokens/new?for_domain_server=true
 
-    const QUrl METAVERSE_SERVER_URL_STABLE { "https://metaverse.highfidelity.com" };
-    const QUrl METAVERSE_SERVER_URL_STAGING { "https://staging.projectathena.io" };
+    const QUrl METAVERSE_SERVER_URL_STABLE { "http://metaverse.darlingvr.net:9400" };
+    const QUrl METAVERSE_SERVER_URL_STAGING { "http://metaverse.darlingvr.net:9400/" };
 }
 
 const QString HIFI_URL_SCHEME_ABOUT = "about";
