@@ -32,7 +32,7 @@ file(REMOVE_RECURSE "${CMAKE_CURRENT_BINARY_DIR}/_env")
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/_env")
 
 # Base URL for externally downloaded files
-set(EXTERNAL_BUILD_ASSETS "https://athena-public.s3.amazonaws.com")
+set(EXTERNAL_BUILD_ASSETS "https://darlingvr.s3-us-west-2.amazonaws.com")
 
 if( DEFINED ENV{EXTERNAL_BUILD_ASSETS} )
     set(EXTERNAL_BUILD_ASSETS "$ENV{EXTERNAL_BUILD_ASSETS}")
