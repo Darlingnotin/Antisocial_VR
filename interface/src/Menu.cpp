@@ -768,8 +768,8 @@ Menu::Menu() {
     // Help/Application menu ----------------------------------
     MenuWrapper * helpMenu = addMenu("Help");
 
-    // Help > About Project Athena
-    action = addActionToQMenuAndActionHash(helpMenu, "About Project Athena");
+    // Help > About DarlingVR
+    action = addActionToQMenuAndActionHash(helpMenu, "About DarlingVR");
     connect(action, &QAction::triggered, [] {
         qApp->showDialog(QString("hifi/dialogs/AboutDialog.qml"),
             QString("hifi/dialogs/TabletAboutDialog.qml"), "AboutDialog");
@@ -779,7 +779,7 @@ Menu::Menu() {
     // Help > Athena Docs
     action = addActionToQMenuAndActionHash(helpMenu, "Online Documentation");
     connect(action, &QAction::triggered, qApp, [] {
-        QDesktopServices::openUrl(QUrl("https://docs.projectathena.dev/"));
+        QDesktopServices::openUrl(QUrl("https://docs.DarlingVR.dev/"));
     });
 
     // Help > Athena Forum
@@ -791,7 +791,7 @@ Menu::Menu() {
     // Help > Scripting Reference
     action = addActionToQMenuAndActionHash(helpMenu, "Online Script Reference");
     connect(action, &QAction::triggered, qApp, [] {
-        QDesktopServices::openUrl(QUrl("https://apidocs.projectathena.dev/"));
+        QDesktopServices::openUrl(QUrl("https://apidocs.DarlingVR.dev/"));
     });
 
     addActionToQMenuAndActionHash(helpMenu, "Controls Reference", 0, qApp, SLOT(showHelp()));
@@ -801,7 +801,7 @@ Menu::Menu() {
     // Help > Release Notes
     action = addActionToQMenuAndActionHash(helpMenu, "Release Notes");
     connect(action, &QAction::triggered, qApp, [] {
-        QDesktopServices::openUrl(QUrl("https://docs.projectathena.dev/release-notes.html"));
+        QDesktopServices::openUrl(QUrl("https://docs.DarlingVR.dev/release-notes.html"));
     });
 
     // Help > Report a Bug!

@@ -1,4 +1,4 @@
-# Project Athena
+# DarlingVR
 
 #### v0.86.0 K1 (12/3/19)
 
@@ -54,6 +54,6 @@ So the necessary desire is to use High Fidelity as our foundation as a community
 
 ### Contribution
 
-A special thanks to the contributors of the Project Athena.
+A special thanks to the contributors of the DarlingVR.
 
 [Contribution](CONTRIBUTING.md)
