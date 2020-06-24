@@ -306,7 +306,7 @@ endif()
                 else:
                     print("Sorry, " + distro.name(pretty=True) + " is not supported. Please consider helping us out.")
                     print("It's also possible to build Qt for your distribution, please see the documentation at:")
-                    print("https://github.com/kasenvr/project-athena/tree/kasen/core/tools/qt-builder")
+                    print("https://github.com/kasenvr/DarlingVR/tree/kasen/core/tools/qt-builder")
                     return;
             else:
                 print('UNKNOWN OPERATING SYSTEM!!!')

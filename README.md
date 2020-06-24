@@ -33,8 +33,8 @@ interface.exe
 
 ### How to build interface.exe
 
-[For Windows](https://github.com/kasenvr/project-athena/blob/kasen/core/BUILD_WIN.md)
-[For Linux](https://github.com/kasenvr/project-athena/blob/kasen/core/BUILD_LINUX.md)
+[For Windows](https://github.com/kasenvr/DarlingVR/blob/kasen/core/BUILD_WIN.md)
+[For Linux](https://github.com/kasenvr/DarlingVR/blob/kasen/core/BUILD_LINUX.md)
 
 ### Boot to Metaverse: The Goal
 

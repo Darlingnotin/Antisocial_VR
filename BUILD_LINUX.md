@@ -74,7 +74,7 @@ sudo apt-get install nodejs
 
 Clone this repository:
 ```bash
-git clone https://github.com/kasenvr/project-athena.git
+git clone https://github.com/kasenvr/DarlingVR.git
 ```
 
 To compile a DEV version checkout the branch you need. To get a list of all tags:
@@ -91,7 +91,7 @@ git checkout kasen/core
 
 Create the build directory:
 ```bash
-cd project-athena
+cd DarlingVR
 mkdir build
 cd build
 ```

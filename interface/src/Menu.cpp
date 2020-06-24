@@ -807,7 +807,7 @@ Menu::Menu() {
     // Help > Report a Bug!
     action = addActionToQMenuAndActionHash(helpMenu, "Report a Bug!");
     connect(action, &QAction::triggered, qApp, [] {
-        QDesktopServices::openUrl(QUrl("https://github.com/kasenvr/project-athena/issues"));
+        QDesktopServices::openUrl(QUrl("https://github.com/kasenvr/DarlingVR/issues"));
     });
 }
 

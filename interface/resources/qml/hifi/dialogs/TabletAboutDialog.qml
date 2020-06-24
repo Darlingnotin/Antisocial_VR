@@ -56,7 +56,7 @@ Rectangle {
             text: "<a href=\"https:/github.com/kasenvr/hifi-community\">DarlingVR Github</a>."
             size: 20
             onLinkActivated: {
-                HiFiAbout.openUrl("https:/github.com/kasenvr/project-athena");
+                HiFiAbout.openUrl("https:/github.com/kasenvr/DarlingVR");
             }
 
         }
