@@ -37,14 +37,14 @@ var visible = false;
 var historyVisible = false;
 var settingsRoot = "FloofChat";
 
-var darlingGotoUrl = "http://metaverse.darlingvr.club:8081/goto.json";
+var darlingGotoUrl = "http://goto.darlingvr.net:8081/goto.json";
 var gotoJSONUrl = Settings.getValue(settingsRoot + "/gotoJSONUrl", darlingGotoUrl);
 
 var muted = Settings.getValue(settingsRoot + "/muted", {"Local": false, "Domain": false, "Grid": false});
 
 var ws;
 var wsReady = false;
-var WEB_SOCKET_URL = "ws://gridchat.darlingvr.club:8090";  // WebSocket for Grid chat.
+var WEB_SOCKET_URL = "ws://chat.darlingvr.net:8090";  // WebSocket for Grid chat.
 var shutdownBool = false;
 
 var defaultColour = {red: 255, green: 255, blue: 255};
