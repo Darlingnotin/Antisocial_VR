@@ -1,4 +1,17 @@
+//  explore.js
+//
+//  Created by Darlingnotin in 2019.
+//  Copyright 2019 Darling
+//
+//  App maintained in: https://github.com/kasenvr/Decentralized_GoTo_Experimental
+//  App copied to: https://github.com/kasenvr/project-athena
+//
+//  Distributed under the ISC license.
+//  See the accompanying file LICENSE or https://opensource.org/licenses/ISC
+
 (function () {
+    var defaultGoToJSON = "http://goto.darlingvr.net:8081/goto.json";
+    
     var tablet = Tablet.getTablet("com.highfidelity.interface.tablet.system");
     Menu.menuItemEvent.connect(onMenuItemEvent);
     var AppUi = Script.require('appUi');
@@ -7,33 +20,36 @@
     Menu.addMenu("GoTo");
     Menu.addMenuItem("GoTo", "Subscribe to new GoTo provider");
     Menu.addMenu("GoTo > Unsubscribe from GoTo provider");
-    var goToAddress = Settings.getValue("goToDecentral", "");
+    var goToAddress = Settings.getValue("DarlingVRGoTo", "");
     for (var i = 0; i < goToAddress.length; i++) {
         Menu.addMenuItem("GoTo > Unsubscribe from GoTo provider", goToAddress[i]);
     }
     var ui;
     function startup() {
-        goToAddress = Settings.getValue("goToDecentral", "");
+        goToAddress = Settings.getValue("DarlingVRGoTo", "");
         if (goToAddress == "") {
-            var initialGoToList = "http://metaverse.darlingvr.net:8081/goto.json";
+            var initialGoToList = Script.resolvePath(defaultGoToJSON);
             Menu.addMenuItem("GoTo > Unsubscribe from GoTo provider", initialGoToList);
             goToAddressNow = [
                 initialGoToList
             ];
-            Settings.setValue("goToDecentral", goToAddressNow);
+            Settings.setValue("DarlingVRGoTo", goToAddressNow);
         }
+
+        var scriptDir = Script.resolvePath("");
+        scriptDir = scriptDir.slice(0, scriptDir.lastIndexOf("/") + 1);
+
         ui = new AppUi({
             buttonName: "GoTo",
             home: Script.resolvePath("decentralizedGoTo.html"),
-            icon: Script.resolvePath("goto-a.svg"),
-            activeIcon: Script.resolvePath("goto-a-msg.svg")
+            graphicsDirectory: scriptDir
         });
     }
 
     function onWebEventReceived(event) {
         messageData = JSON.parse(event);
         if (messageData.action == "requestAddressList") {
-            goToAddresses = Settings.getValue("goToDecentral", "");
+            goToAddresses = Settings.getValue("DarlingVRGoTo", "");
             for (var i = 0; i < goToAddresses.length; i++) {
 
                 try {
@@ -68,18 +84,29 @@
             Window.location = messageData.visit;
         } else if (messageData.action == "addLocation") {
 
-            var messageDataDomainInformation = {
+            var locationBoxUserData = {
                 owner: messageData.owner,
                 domainName: messageData.domainName,
-                port: messageData.Port
+                port: messageData.Port,
+                ipAddress: null,
+                avatarCountRadius: null,
+                customPath: null,
+                grabbableKey: {
+                    grabbable: false
+                }
             };
+            
+            var locationBoxName = "Explore Marker (" + messageData.domainName + ")";
 
             locationboxID = Entities.addEntity({
                 position: Vec3.sum(MyAvatar.position, Quat.getFront(MyAvatar.orientation)),
-                userData: JSON.stringify(messageDataDomainInformation),
+                userData: JSON.stringify(locationBoxUserData),
                 serverScripts: messageData.script,
                 color: { red: 255, green: 0, blue: 0 },
-                type: "Box"
+                type: "Box",
+                name: locationBoxName,
+                collisionless: true,
+                grabbable: false
             });
         } else if (messageData.action == "retrievePortInformation") {
             var readyEvent = {
@@ -88,25 +115,27 @@
             };
 
             tablet.emitScriptEvent(JSON.stringify(readyEvent));
-
+            
         }
     }
 
     function onMenuItemEvent(menuItem) {
+        var menuItemList = JSON.stringify(Settings.getValue("DarlingVRGoTo", ""));
+        var menuItemExists = menuItemList.indexOf(menuItem) !== -1;
         if (menuItem == "Subscribe to new GoTo provider") {
-            goToAddress = Settings.getValue("goToDecentral", "");
+            goToAddress = Settings.getValue("DarlingVRGoTo", "");
             var arrayLength = goToAddress.length;
-            var prom = Window.prompt("Enter URL to GoTo Jason.", "");
+            var prom = Window.prompt("Enter URL to GoTo JSON.", "");
             if (prom) {
                 goToAddress[arrayLength] = prom;
-                Settings.setValue("goToDecentral", goToAddress);
+                Settings.setValue("DarlingVRGoTo", goToAddress);
                 Menu.addMenuItem("GoTo > Unsubscribe from GoTo provider", prom);
             }
-        } else {
-            goToAddresses = Settings.getValue("goToDecentral", "");
+        } else if (menuItemExists) {
+            goToAddresses = Settings.getValue("DarlingVRGoTo", "");
             Menu.removeMenuItem("GoTo > Unsubscribe from GoTo provider", menuItem);
             goToAddresses.remove(menuItem);
-            Settings.setValue("goToDecentral", goToAddresses);
+            Settings.setValue("DarlingVRGoTo", goToAddresses);
         }
     }
 
