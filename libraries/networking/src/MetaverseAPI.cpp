@@ -22,7 +22,7 @@ namespace MetaverseAPI {
     // or you can pass a custom URL via the env variable
     QUrl getCurrentMetaverseServerURL() {
         QUrl selectedMetaverseURL;
-        Setting::Handle<QUrl> selectedMetaverseURLSetting("private/selectedMetaverseURL",
+        Setting::Handle<QUrl> selectedMetaverseURLSetting("metaverse/selectedMetaverseURL",
                                                        NetworkingConstants::METAVERSE_SERVER_URL_STABLE);
 
         selectedMetaverseURL = selectedMetaverseURLSetting.get();
