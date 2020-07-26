@@ -31,6 +31,7 @@ var DEFAULT_SCRIPTS_COMBINED = [
     "system/emote.js",
     "system/miniTablet.js",
     "system/audioMuteOverlay.js",
+    "system/changeMetaverseApi.js",
     "system/decentralizedGoTo/decentralizedGoTo.js",
     "system/keyboardShortcuts/keyboardShortcuts.js"
 ];
