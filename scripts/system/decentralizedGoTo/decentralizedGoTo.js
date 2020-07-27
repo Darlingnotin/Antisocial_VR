@@ -11,7 +11,9 @@
 
 (function () {
     var defaultGoToJSON = "http://goto.darlingvr.net:8081/goto.json";
-    
+    var beaconExists = false;
+    var hasReceivedBeaconMessage = false;
+    var counterBeaconTries = 0;
     var tablet = Tablet.getTablet("com.highfidelity.interface.tablet.system");
     Menu.menuItemEvent.connect(onMenuItemEvent);
     var AppUi = Script.require('appUi');
@@ -49,6 +51,13 @@
     function onWebEventReceived(event) {
         messageData = JSON.parse(event);
         if (messageData.action == "requestAddressList") {
+            var message = {
+                "action": "doesBeaconExist"
+            }
+            permission = Entities.canRez()
+            if (permission) {
+                Messages.sendMessage("goTo", JSON.stringify(message));
+            }
             goToAddresses = Settings.getValue("DarlingVRGoTo", "");
             for (var i = 0; i < goToAddresses.length; i++) {
 
@@ -70,15 +79,40 @@
                 children[z].Owner = children[z].Owner.replace(/</g, '&lt;').replace(/>/g, '&lt;');
             }
 
-            permission = Entities.canRez()
-
             var readyEvent = {
                 "action": "addressList",
                 "myAddress": children,
-                "permission": permission
+                "permission": permission,
+                "beaconExists": beaconExists
             };
 
-            tablet.emitScriptEvent(JSON.stringify(readyEvent));
+            sendMyMessage();
+            function sendMyMessage() {
+                Script.setTimeout(function () {
+                    if (!permission) {
+                        tablet.emitScriptEvent(JSON.stringify(readyEvent));
+                        beaconExists = false;
+                        hasReceivedBeaconMessage = false;
+                    } else {
+                        if (hasReceivedBeaconMessage) {
+                            tablet.emitScriptEvent(JSON.stringify(readyEvent));
+                            beaconExists = false;
+                            hasReceivedBeaconMessage = false;
+                            counterBeaconTries = 0;
+                        } else if (!hasReceivedBeaconMessage) {
+                            if (counterBeaconTries == 10) {
+                                tablet.emitScriptEvent(JSON.stringify(readyEvent));
+                                beaconExists = false;
+                                hasReceivedBeaconMessage = false;
+                                counterBeaconTries = 0;
+                            } else {
+                                counterBeaconTries++;
+                                sendMyMessage();
+                            }
+                        }
+                    }
+                }, 100);
+            }
 
         } else if (messageData.action == "goToUrl") {
             Window.location = messageData.visit;
@@ -95,7 +129,7 @@
                     grabbable: false
                 }
             };
-            
+
             var locationBoxName = "Explore Marker (" + messageData.domainName + ")";
 
             locationboxID = Entities.addEntity({
@@ -115,7 +149,7 @@
             };
 
             tablet.emitScriptEvent(JSON.stringify(readyEvent));
-            
+
         }
     }
 
@@ -153,10 +187,26 @@
     tablet.webEventReceived.connect(onWebEventReceived);
     startup();
 
+    function onMessageReceived(channel, message, sender, localOnly) {
+        if (channel != "goTo") {
+            return;
+        }
+        messageData = JSON.parse(message);
+        if (messageData == "beaconExists") {
+            beaconExists = true;
+            hasReceivedBeaconMessage = true;
+        }
+    }
+
+    Messages.subscribe("goTo");
+    Messages.messageReceived.connect(onMessageReceived);
+
     Script.scriptEnding.connect(function () {
         Messages.unsubscribe("goTo");
         Menu.removeMenu("GoTo");
         tablet.webEventReceived.disconnect(onWebEventReceived);
         Menu.menuItemEvent.disconnect(onMenuItemEvent);
+        Messages.unsubscribe("goTo");
+        Messages.messageReceived.disconnect(onMessageReceived);
     });
 }());

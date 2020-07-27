@@ -142,6 +142,9 @@
                 "script": javascriptURL
             };
             EventBridge.emitWebEvent(JSON.stringify(readyEvent));
+            setTimeout(() => {
+                location = "decentralizedGoTo.html";
+            }, 300);
         }
 
         EventBridge.scriptEventReceived.connect(function (message) {
