@@ -112,7 +112,7 @@
             if (messageData.action == "addressList") {
                 myAddress = messageData.myAddress;
                 createTableFromJSON();
-                if (messageData.permission && !messageData.beaconExists ) {
+                if (messageData.permission) {
                     document.getElementById("addLocation").innerHTML = "<button class=\"myButton\" onclick=\"window.location.href = 'addLocation.html';\">Add Location To Explore</button>";
                 }
             }
