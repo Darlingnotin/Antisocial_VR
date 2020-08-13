@@ -101,7 +101,10 @@
     <input type="text" id="domainName" placeholder="Enter Domain Name here">
     <h3>Owner</h3>
     <input type="text" id="owner" placeholder="Enter Owner here"><br><br>
-
+    <input onclick="usePortForwarding()" type="checkbox" id="usePortForwardingCheckBox" name="vehicle1">
+    <label for="usePortForwardingCheckBox"> Use port forwarding.</label><br>
+    <h3 id="portText"></h3>
+    <p id="portInputField"></p>
     <button class="myButton" onclick="addLocation()">Add</button>
 
     <script>
@@ -133,18 +136,41 @@
                 owner = "Enter owner of domain";
             }
             var javascriptURL = document.getElementById("javascriptURL").value;
-            port = 40102;
+
+            var portForwardingCheckBoxValue = document.getElementById("usePortForwardingCheckBox").checked;
+            if (portForwardingCheckBoxValue) {
+                var port = document.getElementById("port").value;
+                var javascriptURL = document.getElementById("javascriptURL").value;
+                if (port == "") {
+                    port = 40102;
+                }
+            } else {
+                port = 40102;
+            }
+
             var readyEvent = {
                 "action": "addLocation",
                 "domainName": domainName,
                 "owner": owner,
                 "Port": port,
-                "script": javascriptURL
+                "script": javascriptURL,
+                "portForward": portForwardingCheckBoxValue
             };
             EventBridge.emitWebEvent(JSON.stringify(readyEvent));
             setTimeout(() => {
                 location = "decentralizedGoTo.html";
             }, 300);
+        }
+
+        function usePortForwarding() {
+            var portForwardingCheckBoxValue = document.getElementById("usePortForwardingCheckBox").checked;
+            if (portForwardingCheckBoxValue) {
+                document.getElementById("portText").innerHTML = "<h3>Port</h3>";
+                document.getElementById("portInputField").innerHTML = "<input type=\"text\" id=\"port\" placeholder=\"Enter Port here (default 40102)\"><br><br>";
+            } else if (!portForwardingCheckBoxValue) {
+                document.getElementById("portText").innerHTML = "";
+                document.getElementById("portInputField").innerHTML = "";
+            }
         }
 
         EventBridge.scriptEventReceived.connect(function (message) {

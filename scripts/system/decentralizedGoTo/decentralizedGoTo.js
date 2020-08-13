@@ -88,6 +88,7 @@
                 owner: messageData.owner,
                 domainName: messageData.domainName,
                 port: messageData.Port,
+                portForward: messageData.portForward,
                 ipAddress: null,
                 avatarCountRadius: null,
                 customPath: null,
