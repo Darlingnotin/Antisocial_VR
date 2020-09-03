@@ -2,7 +2,7 @@
   "avatars": [
     {
       "name": "Wooden Mannequin",
-      "preview_image": "https://hifi-metaverse.s3-us-west-1.amazonaws.com/marketplace/previews/7fe80a1e-f445-4800-9e89-40e677b03bee/large/hifi-mp-7fe80a1e-f445-4800-9e89-40e677b03bee.jpg",
+      "preview_image": "qrc:////meshes/hifi-mp-7fe80a1e-f445-4800-9e89-40e677b03bee.jpg",
       "url": "qrc:////meshes/defaultAvatar_full.fst"
     },
     {
@@ -27,13 +27,13 @@
     },
     {
       "name": "Matthew: Photo-real avatar",
-      "preview_image": "https://hifi-metaverse.s3-us-west-1.amazonaws.com/marketplace/previews/b652081b-a199-425e-ae5c-7815721bdc09/thumbnail/hifi-mp-b652081b-a199-425e-ae5c-7815721bdc09.jpg",
-      "url": "http://mpassets.highfidelity.com/b652081b-a199-425e-ae5c-7815721bdc09-v1/matthew.fst"
+      "preview_image": "qrc:////meshes/hifi-mp-b652081b-a199-425e-ae5c-7815721bdc09.jpg",
+      "url": "qrc:////meshes/matthew.fst"
     },
     {
       "name": "Priscilla: Photo real avatar",
-      "preview_image": "https://hifi-metaverse.s3-us-west-1.amazonaws.com/marketplace/previews/e7565f93-8bc5-47c2-b6eb-b3b31d4a1339/thumbnail/hifi-mp-e7565f93-8bc5-47c2-b6eb-b3b31d4a1339.jpg",
-      "url": "http://mpassets.highfidelity.com/e7565f93-8bc5-47c2-b6eb-b3b31d4a1339-v1/priscilla.fst"
+      "preview_image": "qrc:////meshes/hifi-mp-e7565f93-8bc5-47c2-b6eb-b3b31d4a1339.jpg",
+      "url": "qrc:////meshes/priscilla.fst"
     },
     {
       "name": "H1-F1 Optical Interpreter bot",

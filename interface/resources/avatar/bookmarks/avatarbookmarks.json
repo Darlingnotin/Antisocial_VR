@@ -837,7 +837,7 @@
         "avatarEntites": [
         ],
         "avatarScale": 1,
-        "avatarUrl": "http://mpassets.highfidelity.com/b652081b-a199-425e-ae5c-7815721bdc09-v1/matthew.fst",
+        "avatarUrl": "qrc:////meshes/matthew.fst",
         "version": 3
     },
     "Priscilla": {
@@ -846,7 +846,7 @@
         "avatarEntites": [
         ],
         "avatarScale": 1,
-        "avatarUrl": "http://mpassets.highfidelity.com/e7565f93-8bc5-47c2-b6eb-b3b31d4a1339-v1/priscilla.fst",
+        "avatarUrl": "qrc:////meshes/priscilla.fst",
         "version": 3
     },
     "Woody": {
@@ -855,7 +855,7 @@
         "avatarEntites": [
         ],
         "avatarScale": 1,
-        "avatarUrl": "http://mpassets.highfidelity.com/ad348528-de38-420c-82bb-054cb22163f5-v1/mannequin.fst",
+        "avatarUrl": "qrc:////meshes/defaultAvatar_full.fst",
         "version": 3
     }
 }
