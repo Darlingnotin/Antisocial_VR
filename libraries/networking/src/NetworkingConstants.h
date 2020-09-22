@@ -25,8 +25,8 @@ namespace NetworkingConstants {
     // if you manually generate a personal access token for the domains scope
     // at https://staging.highfidelity.com/user/tokens/new?for_domain_server=true
 
-    const QUrl METAVERSE_SERVER_URL_STABLE { "https://metaverse.highfidelity.com" };
-    const QUrl METAVERSE_SERVER_URL_STAGING { "https://staging-metaverse.vircadia.com" };
+    const QUrl METAVERSE_SERVER_URL_STABLE { "http://localhost" };
+    const QUrl METAVERSE_SERVER_URL_STAGING { "http://localhost" };
 
     // Web Engine requests to this parent domain have an account authorization header added
     const QString AUTH_HOSTNAME_BASE = "highfidelity.com";
