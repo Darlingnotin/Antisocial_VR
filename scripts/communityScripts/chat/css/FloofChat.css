@@ -50,12 +50,6 @@ div.dockButton button.active {
     border-top: none;
 }
 
-#tabs {
-    width: 250px !important;
-}
-
-
-
 body {
     width: 100%;
     height: 100%;
@@ -75,10 +69,9 @@ body {
 }
 
 .ChatLog {
-    height: calc(100vh - 127px);
-    padding: 10px !important;
-    font-size: 18px;
-    font-family: 'Roboto', sans-serif;
+    height: calc(100vh - 137px);
+    padding: 20px !important;
+    font-size: 20px;
     color: white;
     background-color: black;
     overflow-x: hidden;
@@ -87,7 +80,7 @@ body {
 }
 
 .ChatLogLine {
-    margin-bottom: 7px;
+    margin-bottom: 15px;
 }
 
 .ChatLogLineDisplayName {
@@ -98,30 +91,25 @@ body {
 }
 
 .LogLogLine {
-    margin-bottom: 7px;
-    padding: 6px !important;
+    margin-bottom: 15px;
+    padding: 10px !important;
 }
 
 .LogLogLineMessage {
     /*font-style: italic;*/
 }
 
-.LogLogLineTimestamp {
-    font-weight: 300;
-    font-size: 16px;
-}
-
 .ChatInput {
     color: #252525;
     background: #252525;
-    height: 45px !important;
+    height: 60px !important;
 }
 
 .ChatInputText {
-    padding: 5px 5px 5px 10px !important;
-    height: 35px !important;
+    padding: 5px !important;
+    height: 50px !important;
     width: calc(100vw - 20px) !important;
-    font-size: 18px !important;
+    font-size: 20px !important;
     background-color: white !important;
     border-style: solid !important;
     border-color: #232323 !important;
@@ -156,14 +144,6 @@ body {
 
 .muteSwitch label input[type=checkbox]:checked + .lever:after {
     background-color: #a62113 !important;
-}
-
-#muteText {
-    font-size: 16px;
-}
-
-#muteAudioText {
-    font-size: 16px;
 }
 
 img, a{

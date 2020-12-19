@@ -12,7 +12,6 @@
     <link type="text/css" rel="stylesheet" href="css/FloofChat.css" media="screen,projection"/>
 
     <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600,700" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet"> 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 </head>
@@ -29,16 +28,8 @@
         </span>
         <div class="switch muteSwitch col s2">
             <label>
-                <span id="muteText">Hide Popups</span>
+                <span style="font-size: 20px" id="muteText">Mute</span>
                 <input type="checkbox" id="muteInput" onclick="muteSwitchToggle()">
-                <span class="lever waves-light"></span>
-            </label>
-        </div>
-        
-        <div class="switch muteSwitch col s2">
-            <label>
-                <span id="muteAudioText">Mute Sound</span>
-                <input type="checkbox" id="muteAudioInput" onclick="muteAudioSwitchToggle()">
                 <span class="lever waves-light"></span>
             </label>
         </div>
@@ -55,7 +46,6 @@
 
 <script>
     var muted = {"Local": false, "Domain": false, "Grid": false};
-    var mutedAudio = {"Local": false, "Domain": false, "Grid": false};
     var instance;
     var appUUID;
     var messageData = {}; // The data that is sent along with the message.
@@ -160,7 +150,7 @@
 
             return elContent;
         }
-        
+
         // For any URLs present, unless they are already identified within
         // an `a` element, linkify them.
         function _linkifyUrls(matches, $el) {
@@ -181,55 +171,28 @@
                     case ext == "JPG":
                     case ext == "GIF":
                     case ext == "JPEG":
-                        var replaceWith = "<br/>";
-                        replaceWith += "<img src='" + this + "'class=\"responsive z-depth-2\"><br/>";
-                        replaceWith += "<a onclick=\"gotoClipboard('" + this + "');return false;\" href=\"" + this + "\" target=\"_blank\">" + this + "</a>";
-                        replaceWith += "<a onclick=\"gotoExternalURL('" + this + "');return false;\"href=\"" + this + "\">&#x1F4F2;</a>";
-
-                        elContent = elContent.replace(this, replaceWith);
+                        elContent = elContent.replace(this, "<br/><img src='" + this + "'class=\"responsive z-depth-2\"><br/><a href=\"javascript:gotoClipboard('" + this + "');\" target='_blank'>" + this + "</a>");
                         break;
                     case ext == "iframe":
-                        var replaceWith = "<br/>";
-                        replaceWith += "<iframe class=\"z-depth-2\" src='" + this;
-                        replaceWith += "'width=\"440\" height=\"248\" frameborder=\"0\"></iframe>";
-
-                        elContent = elContent.replace(this, replaceWith);
+                        elContent = elContent.replace(this, "<br/><iframe class=\"z-depth-2\" src='" + this + "'width=\"440\" height=\"248\" frameborder=\"0\"></iframe>");
                         break;
                     case ext == "webm":
-                        var replaceWith = "<br/>";
-                        replaceWith += "<video controls class=\"z-depth-2 responsive\"><source src='" + this;
-                        replaceWith += "' type='video/" + ext + "'></video>";
-                        replaceWith += "<br/>";
-                        replaceWith += "<a onclick=\"gotoClipboard('" + this + "');return false;\" href=\"" + this + "\">" + this + "</a>";
-                        replaceWith += "<a onclick=\"gotoExternalURL('" + this + "');return false;\"href=\"" + this + "\">&#x1F4F2;</a>";
-
-                        elContent = elContent.replace(this, replaceWith);
+                        elContent = elContent.replace(this, "<br/><video controls class=\"z-depth-2 responsive\"><source src='" + this + "' type='video/" + ext + "'></video><br/><a href=\"javascript:gotoClipboard('" + this + "');\">" + this + "</a>");
                         break;
                     case protocol === "HIFI":
                     case protocol === "hifi":
                         elContent = elContent.replace(this, "<br/><a href=\"javascript:gotoHiFi('" + this + "');\">" + this + "</a>");
                         break;
-					case !!this.match(/(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([^& \n<]+)(?:[^ \n<]+)?/g):
+					          case !!this.match(/(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([^& \n<]+)(?:[^ \n<]+)?/g):
                         var youtubeMatch = this.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
                         if (youtubeMatch && youtubeMatch[2].length == 11) {
-                            var replaceWith = "<br/>";
-                            replaceWith += "<iframe class=\"z-depth-2\" width='420' height='236' src='https://www.youtube.com/embed/" + youtubeMatch[2] + "' frameborder='0'></iframe>";
-                            replaceWith += "<br/>";
-                            replaceWith += "<a onclick=\"gotoExternalURL('" + this + "');return false;\" href=\"" + this + "\">" + this + "</a>";
-                            replaceWith += "<a onclick=\"gotoExternalURL('" + this + "');return false;\" href=\"" + this + "\">&#x1F4F2;</a>";
-
-                            elContent = replaceWith;
+                            elContent = "<br/><iframe class=\"z-depth-2\" width='420' height='236' src='https://www.youtube.com/embed/" + youtubeMatch[2] + "' frameborder='0'></iframe><br/><a href=\"javascript:gotoURL('" + this + "');\">" + this + "</a>";
                             break;
                         }
                     // else fall through to default
                     default:
-                        var replaceWith = "<br/>";
-                        replaceWith += "<a onclick=\"gotoURL('" + this + "');return false;\" href=\"" + this + "\">" + this + "</a>";
-                        replaceWith += "<a onclick=\"gotoExternalURL('" + this + "');return false;\"href=\"" + this + "\">&#x1F4F2;</a>";
-
-                        elContent = elContent.replace(this, replaceWith);
+                        elContent = elContent.replace(this, "<br/><a href=\"javascript:gotoURL('" + this + "');\">" + this + "</a>");
                         break;
-                        
                 }
 
             });
@@ -321,10 +284,6 @@
     function gotoURL(url) {
         emitWebEvent({type: "CMD", cmd: "URL", url: url});
     }
-    
-    function gotoExternalURL(url) {
-        emitWebEvent({ type: "CMD", cmd: "EXTERNALURL", url: url });
-    }
 
     function gotoClipboard(url) {
         M.toast({html: 'Copied URL to Clipboard', classes: 'rounded pink white-text'});
@@ -363,7 +322,7 @@
         location.reload();
     }
 
-    function logMessage(timestamp, userName, message, logScreen, colour) {
+    function logMessage(userName, message, logScreen, colour) {
         var LogScreen = $("#" + logScreen);
         var $logLine =
             $('<div/>')
@@ -374,10 +333,6 @@
                 .addClass('z-depth-2')
                 .data('chat-message', message).css("color", rgbToHex(colour))
                 .appendTo(LogScreen);
-        $('<span/>')
-            .addClass('LogLogLineTimestamp')
-            .text(timestamp).css("color", rgbToHex(colour))
-            .appendTo($logLine);
         $('<b/>')
             .addClass('LogLogLineMessage')
             .text(userName + ": ").css("color", rgbToHex(colour))
@@ -395,24 +350,18 @@
 
     function time() {
         var d = new Date();
-        // Months are returned in range 0-11 instead of 1-12, so we have to add 1.
-        var month = (d.getMonth() + 1).toString(); 
-        var day = (d.getDate()).toString();
         var h = (d.getHours()).toString();
         var m = (d.getMinutes()).toString();
         var s = (d.getSeconds()).toString();
         var h2 = ("0" + h).slice(-2);
         var m2 = ("0" + m).slice(-2);
         var s2 = ("0" + s).slice(-2);
-        // s2 += (d.getMilliseconds() / 1000).toFixed(2).slice(1);
-        return month + "/" + day + " - " + h2 + ":" + m2 + ":" + s2;
+        s2 += (d.getMilliseconds() / 1000).toFixed(2).slice(1);
+        return h2 + ":" + m2 + ":" + s2;
     }
 
     var muteInput;
     var muteText;
-    
-    var muteAudioInput;
-    var muteAudioText;
 
     function muteSwitchToggle() {
         muted[getCurrTab()] = muteInput.checked;
@@ -420,33 +369,18 @@
         muteText.classList.remove(!muteInput.checked ? "red-text" : "white-text");
         emitWebEvent({type: "CMD", cmd: "MUTED", muted: muted});
     }
-    
-    function muteAudioSwitchToggle() {
-        mutedAudio[getCurrTab()] = muteAudioInput.checked;
-        muteAudioText.classList.add(muteAudioInput.checked ? "red-text" : "white-text");
-        muteAudioText.classList.remove(!muteAudioInput.checked ? "red-text" : "white-text");
-        emitWebEvent({ type: "CMD", cmd: "MUTEDAUDIO", muted: mutedAudio });
-    }
 
     function main() {
 
         muteInput = document.getElementById("muteInput");
         muteText = document.getElementById("muteText");
-        
-        muteAudioInput = document.getElementById("muteAudioInput");
-        muteAudioText = document.getElementById("muteAudioText");
 
         instance = M.Tabs.init(document.getElementById("tabs"), {
             "onShow": function (e) {
                 scrollChatLog(getCurrTab());
-                
                 muteInput.checked = muted[getCurrTab()];
                 muteText.classList.add(muteInput.checked ? "red-text" : "white-text");
                 muteText.classList.remove(!muteInput.checked ? "red-text" : "white-text");
-                
-                muteAudioInput.checked = mutedAudio[getCurrTab()];
-                muteAudioText.classList.add(muteAudioInput.checked ? "red-text" : "white-text");
-                muteAudioText.classList.remove(!muteAudioInput.checked ? "red-text" : "white-text");
             }
         });
         instance.select("Local");
@@ -496,11 +430,11 @@
                         var temp = cmd.data;
                         if (temp.length === 1) {
                             var temp2 = temp[0];
-                            logMessage("[" + temp2[0] + "] ", temp2[2], temp2[1], temp2[4], temp2[3]);
+                            logMessage("[" + temp2[0] + "] " + temp2[2], temp2[1], temp2[4], temp2[3]);
                             scrollChatLog(temp2[4]);
                         } else if (temp.length > 1) {
                             temp.forEach(function (msg) {
-                                logMessage("[" + msg[0] + "] ", msg[2], msg[1], msg[4], msg[3]);
+                                logMessage("[" + msg[0] + "] " + msg[2], msg[1], msg[4], msg[3]);
                                 scrollChatLog(msg[4]);
                             });
                         }
@@ -510,12 +444,6 @@
                             muteInput.checked = muted[getCurrTab()];
                             muteText.classList.add(muteInput.checked ? "red-text" : "white-text");
                             muteText.classList.remove(!muteInput.checked ? "red-text" : "white-text");
-                        }
-                        if (cmd.cmd === "MUTEDAUDIO") {
-                            mutedAudio = cmd.muted;
-                            muteAudioInput.checked = mutedAudio[getCurrTab()];
-                            muteAudioText.classList.add(muteAudioInput.checked ? "red-text" : "white-text");
-                            muteAudioText.classList.remove(!muteAudioInput.checked ? "red-text" : "white-text");
                         }
                     }
                 });
