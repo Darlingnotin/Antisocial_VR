@@ -27,8 +27,8 @@ namespace NetworkingConstants {
     // at https://staging.highfidelity.com/user/tokens/new?for_domain_server=true
 
     // For now we only have one Metaverse server.
-    const QUrl METAVERSE_SERVER_URL_STABLE { "https://metaverse.vircadia.com/live" };
-    const QUrl METAVERSE_SERVER_URL_STAGING { "https://metaverse.vircadia.com/live" };
+    const QUrl METAVERSE_SERVER_URL_STABLE { "http://metaverse.darlingvr.net:9400" };
+    const QUrl METAVERSE_SERVER_URL_STAGING { "http://metaverse.darlingvr.net:9400" };
 
     // Web Engine requests to this parent domain have an account authorization header added
     const QString AUTH_HOSTNAME_BASE = "vircadia.com";
