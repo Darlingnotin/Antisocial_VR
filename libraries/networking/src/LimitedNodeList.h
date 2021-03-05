@@ -56,7 +56,7 @@ static const size_t DEFAULT_MAX_CONNECTION_RATE { std::numeric_limits<size_t>::m
 const char DEFAULT_ASSIGNMENT_SERVER_HOSTNAME[] = "localhost";
 
 const char STUN_SERVER_HOSTNAME[] = "stun1.l.google.com";
-const unsigned short STUN_SERVER_PORT = 3478;
+const unsigned short STUN_SERVER_PORT = 19302;
 
 const QString DOMAIN_SERVER_LOCAL_PORT_SMEM_KEY = "domain-server.local-port";
 const QString DOMAIN_SERVER_LOCAL_HTTP_PORT_SMEM_KEY = "domain-server.local-http-port";
