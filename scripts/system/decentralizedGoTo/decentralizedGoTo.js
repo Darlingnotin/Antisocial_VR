@@ -117,6 +117,12 @@
 
             tablet.emitScriptEvent(JSON.stringify(readyEvent));
             
+        } else if (messageData.action == "goBackOrForward") {
+            if (messageData.backOrForward == "goBack") {
+                location.goBack();
+            } else {
+                location.goForward();
+            }
         }
     }
 
