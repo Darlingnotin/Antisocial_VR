@@ -66,18 +66,42 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
+
+        #goBack {
+            position: absolute;
+            top: 60px;
+            left: 79%;
+            width: 44px;
+            height: 44px;
+        }
+
+        #goForward {
+            position: absolute;
+            top: 60px;
+            left: 85%;
+            width: 44px;
+            height: 44px;
+        }
     </style>
 </head>
 
 <body onload="retrieveAddressList()">
-    
+
     <input type="text" id="domainAddressInput" placeholder="Type domain address here">
 
     <button class="myButton" onclick="myDomainAddressInputGoTo()">Visit</button>
-    
+
     <p id="showData"></p>
 
     <p id="addLocation"></p>
+
+    <svg onclick="goBackOrForward('goBack')" id="goBack" viewBox="0 0 24 24">
+        <image xlink:href="arrow_left-black-18dp.svg" width="24px" height="24px" />
+    </svg>
+
+    <svg onclick="goBackOrForward('goForward')" id="goForward" viewBox="0 0 24 24">
+        <image xlink:href="arrow_right-black-18dp.svg" width="24px" height="24px" />
+    </svg>
 
     <script>
 
@@ -175,6 +199,14 @@
                 globalSearch: true,
                 globalSearchExcludeColumns: [3] // exclude column 2 & 5
             });
+        }
+
+        function goBackOrForward(backOrForward) {
+            var readyEvent = {
+                "action": "goBackOrForward",
+                "backOrForward": backOrForward,
+            };
+            EventBridge.emitWebEvent(JSON.stringify(readyEvent));
         }
     </script>
     <script src="jquery.min.js"></script>
