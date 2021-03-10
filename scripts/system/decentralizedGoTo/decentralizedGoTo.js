@@ -3,15 +3,12 @@
 //  Created by Darlingnotin in 2019.
 //  Copyright 2019 Darling
 //
-//  App maintained in: https://github.com/kasenvr/Decentralized_GoTo_Experimental
-//  App copied to: https://github.com/kasenvr/project-athena
-//
 //  Distributed under the ISC license.
 //  See the accompanying file LICENSE or https://opensource.org/licenses/ISC
 
 (function () {
-    var defaultGoToJSON = "http://goto.darlingvr.net:8081/goto.json";
-    
+    var metaverseServerURL = GlobalServices.metaverseServerURL.split("/")[2].split(":")[0];
+    var defaultGoToJSON = "http://" + metaverseServerURL + ":9401/domains.json";
     var tablet = Tablet.getTablet("com.highfidelity.interface.tablet.system");
     Menu.menuItemEvent.connect(onMenuItemEvent);
     var AppUi = Script.require('appUi');
