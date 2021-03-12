@@ -31,8 +31,6 @@
             top: 1px;
         }
 
-
-
         .myButtonB {
             box-shadow: 3px 4px 0px 0px #899599;
             background: linear-gradient(to bottom, #ededed 5%, #bab1ba 100%);
@@ -88,6 +86,39 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
+
+        #dropDown {
+            background-color: white;
+            width: 470px;
+            height: 500px;
+            border-style: solid;
+            border-width: 1px;
+            border-color: #dddddd;
+            position: absolute;
+            top: 190px;
+            left: 5px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .dropDownButton {
+            border-radius: 20px;
+            background-color: rgb(238, 238, 238);
+            margin: 5px;
+        }
+
+        #javascriptURL {
+            padding-top: 10px;
+            background-color: white;
+            width: 450px;
+            height: 50px;
+            border-style: solid;
+            border-width: 1px;
+            border-color: #dddddd;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
     </style>
 </head>
 
@@ -95,8 +126,7 @@
 
     <h1>Add Location</h1><br>
     <h3>Metaverse Provider URL</h3>
-    <select id="javascriptURL">
-    </select>
+    <p id="javascriptURL" onclick="openMetaphorsProviderDropDown()"></p>
     <h3>Domain Name</h3>
     <input type="text" id="domainName" placeholder="Enter Domain Name here">
     <h3>Owner</h3>
@@ -106,6 +136,12 @@
     <h3 id="portText"></h3>
     <p id="portInputField"></p>
     <button class="myButton" onclick="addLocation()">Add</button>
+    <h3>Anarchy Server</h3>
+    <p>The default anarchy server will allow you to add locations.<br>
+        Servers do not have to be signed in to the metaverse server to add locations.
+        You can also run your own and share your url with your friends.</p>
+    <button class="myButton" onclick="addDefaultAnarchyServer()">Add default anarchy server</button>
+    <div hidden=true id="dropDown"></div>
 
     <script>
         var retrievePortInformationResponse;
@@ -118,12 +154,18 @@
         }
 
         function addToSelect() {
+            var dropDownInnerHTML = "";
             for (let i = 0; i < metaverseProviderList.length; i++) {
-                var x = document.getElementById("javascriptURL");
-                var option = document.createElement("option");
-                option.text = metaverseProviderList[i];
-                x.add(option);
+                //var x = document.getElementById("javascriptURL");
+                //var option = document.createElement("option");
+                document.getElementById("javascriptURL").innerHTML = metaverseProviderList[i];
+                //option.text = metaverseProviderList[i];
+                //x.add(option);
+
+                // chooseMetaverseProvider
+                dropDownInnerHTML = dropDownInnerHTML + "<p class=\"dropDownButton\" onclick=\"chooseMetaverseProvider('" + metaverseProviderList[i] + "')\">" + metaverseProviderList[i] + "</p>";
             }
+            document.getElementById("dropDown").innerHTML = dropDownInnerHTML;
         }
 
         function addLocation() {
@@ -135,7 +177,7 @@
             if (owner == "") {
                 owner = "Enter owner of domain";
             }
-            var javascriptURL = document.getElementById("javascriptURL").value;
+            var javascriptURL = document.getElementById("javascriptURL").innerHTML;
 
             var portForwardingCheckBoxValue = document.getElementById("usePortForwardingCheckBox").checked;
             if (portForwardingCheckBoxValue) {
@@ -184,6 +226,21 @@
                 addToSelect();
             }
         });
+        function addDefaultAnarchyServer() {
+            var readyEvent = {
+                "action": "addDefaultAnarchyServer",
+            };
+            EventBridge.emitWebEvent(JSON.stringify(readyEvent));
+        }
+        function openMetaphorsProviderDropDown() {
+            if (metaverseProviderList.length > 1) {
+                document.getElementById("dropDown").hidden = false;
+            }
+        }
+        function chooseMetaverseProvider(providerScriptURL) {
+            document.getElementById("dropDown").hidden = true;
+            document.getElementById("javascriptURL").innerHTML = providerScriptURL;
+        }
 
     </script>
 

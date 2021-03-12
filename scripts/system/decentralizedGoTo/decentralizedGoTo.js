@@ -8,6 +8,7 @@
 
 (function () {
     var metaverseServerURL = GlobalServices.metaverseServerURL.split("/")[2].split(":")[0];
+    var defaultAnarchyServer = "http://goto.darlingvr.net:8081/goto.json";
     var defaultGoToJSON = "http://" + metaverseServerURL + ":9401/domains.json";
     var tablet = Tablet.getTablet("com.highfidelity.interface.tablet.system");
     Menu.menuItemEvent.connect(onMenuItemEvent);
@@ -93,7 +94,7 @@
                     grabbable: false
                 }
             };
-            
+
             var locationBoxName = "Explore Marker (" + messageData.domainName + ")";
 
             locationboxID = Entities.addEntity({
@@ -107,18 +108,48 @@
                 grabbable: false
             });
         } else if (messageData.action == "retrievePortInformation") {
+            var newGoToAddresses = [];
+            for (var i = 0; i < goToAddresses.length; i++) {
+                if (goToAddresses[i] != defaultGoToJSON) {
+                    newGoToAddresses.push(goToAddresses[i]);
+                }
+            }
             var readyEvent = {
                 "action": "retrievePortInformationResponse",
-                "goToAddresses": goToAddresses
+                "goToAddresses": newGoToAddresses
             };
 
             tablet.emitScriptEvent(JSON.stringify(readyEvent));
-            
+
         } else if (messageData.action == "goBackOrForward") {
             if (messageData.backOrForward == "goBack") {
                 location.goBack();
             } else {
                 location.goForward();
+            }
+        } else if (messageData.action == "addDefaultAnarchyServer") {
+            var goToAddress = Settings.getValue("DarlingVRGoTo", "");
+            var urlExists = false;
+            for (var i = 0; i < goToAddress.length; i++) {
+                if (goToAddress[i] == defaultAnarchyServer) {
+                    urlExists = true;
+                }
+            }
+            if (!urlExists) {
+                goToAddress.push(defaultAnarchyServer);
+                Settings.setValue("DarlingVRGoTo", goToAddress);
+                Menu.addMenuItem("GoTo > Unsubscribe from GoTo provider", defaultAnarchyServer);
+                var newGoToAddresses = [];
+                for (var i = 0; i < goToAddress.length; i++) {
+                    if (goToAddress[i] != defaultGoToJSON) {
+                        newGoToAddresses.push(goToAddress[i]);
+                    }
+                }
+                var readyEvent = {
+                    "action": "retrievePortInformationResponse",
+                    "goToAddresses": newGoToAddresses
+                };
+                tablet.emitScriptEvent(JSON.stringify(readyEvent));
             }
         }
     }
