@@ -58,7 +58,7 @@ var URLs = {
 var Strings = {
   LOADING_SETTINGS_ERROR: "There was a problem loading the domain settings.\nPlease refresh the page to try again.",
 
-  CHOOSE_DOMAIN_BUTTON: "Choose from my domains",
+  CHOOSE_DOMAIN_BUTTON: "Choose domain name",
   CREATE_DOMAIN_BUTTON: "Create new domain ID",
   CREATE_DOMAIN_SUCCESS_JUST_CONNECTED: "We connnected your High Fidelity account and created a new domain ID for this machine.",
   CREATE_DOMAIN_SUCCESS: "We created a new domain ID for this machine.",
@@ -188,12 +188,12 @@ var pendingDomainRequest = null;
 function getDomainFromAPI(callback) {
   if (pendingDomainRequest !== null) {
     pendingDomainRequest.success(callback);
-    pendingDomainRequest.error(function() { callback({ status: 'fail' }) });
+    pendingDomainRequest.error(function () { callback({ status: 'fail' }) });
     return pendingDomainRequest;
   }
 
   if (callback === undefined) {
-    callback = function() {};
+    callback = function () { };
   }
 
   if (!domainIDIsSet()) {
@@ -206,7 +206,7 @@ function getDomainFromAPI(callback) {
   pendingDomainRequest = $.ajax({
     url: "/api/domains/" + domainID,
     dataType: 'json',
-    success: function(data) {
+    success: function (data) {
       pendingDomainRequest = null;
 
       if (data.status === 'success') {
@@ -216,7 +216,7 @@ function getDomainFromAPI(callback) {
       }
       callback(data);
     },
-    error: function() {
+    error: function () {
       pendingDomainRequest = null;
 
       DomainInfo = null;
@@ -236,7 +236,7 @@ function chooseFromHighFidelityPlaces(accessToken, forcePathTo, onSuccessfullyAd
       $.ajax("/api/places", {
         dataType: 'json',
         jsonp: false,
-        success: function(data) {
+        success: function (data) {
           if (data.status == 'success') {
             var modal_buttons = {
               cancel: {
@@ -266,7 +266,7 @@ function chooseFromHighFidelityPlaces(accessToken, forcePathTo, onSuccessfullyAd
               // setup a select box for the returned places
               modal_body.append($("<label for='place-name-select'>Places</label>"));
               place_select = $("<select id='place-name-select' class='form-control'></select>");
-              _.each(data.data.places, function(place) {
+              _.each(data.data.places, function (place) {
                 places_by_id[place.id] = place;
                 place_select.append("<option value='" + place.id + "'>" + place.name + "</option>");
               })
@@ -282,7 +282,7 @@ function chooseFromHighFidelityPlaces(accessToken, forcePathTo, onSuccessfullyAd
               }
 
               var place_select = modal_body.find("#place-name-select")
-              place_select.change(function(ev) {
+              place_select.change(function (ev) {
                 var warning = modal_body.find("#place-name-warning");
                 var place = places_by_id[$(this).val()];
                 if (place === undefined || place.pointee === null) {
@@ -296,7 +296,7 @@ function chooseFromHighFidelityPlaces(accessToken, forcePathTo, onSuccessfullyAd
               modal_buttons["success"] = {
                 label: Strings.ADD_PLACE_CONFIRM_BUTTON,
                 className: 'add-place-confirm-button btn btn-primary',
-                callback: function() {
+                callback: function () {
                   var placeID = $('#place-name-select').val();
                   // set the place ID on the form
                   $(Settings.place_ID_SELECTOR).val(placeID).change();
@@ -322,9 +322,9 @@ function chooseFromHighFidelityPlaces(accessToken, forcePathTo, onSuccessfullyAd
                       data: JSON.stringify(jsonSettings),
                       contentType: 'application/json',
                       type: 'POST'
-                    }).done(function(data) {
+                    }).done(function (data) {
                       if (data.status == "success") {
-                        waitForDomainServerRestart(function() {
+                        waitForDomainServerRestart(function () {
                           dialog.modal('hide');
                           if (onSuccessfullyAdded) {
                             onSuccessfullyAdded(places_by_id[placeID].name, domainID);
@@ -333,7 +333,7 @@ function chooseFromHighFidelityPlaces(accessToken, forcePathTo, onSuccessfullyAd
                       } else {
                         bootbox.alert("Failed to add place");
                       }
-                    }).fail(function() {
+                    }).fail(function () {
                       bootbox.alert("Failed to add place");
                     });
                   }
@@ -345,7 +345,7 @@ function chooseFromHighFidelityPlaces(accessToken, forcePathTo, onSuccessfullyAd
                       placePath,
                       domainID,
                       false,
-                      function(data) {
+                      function (data) {
                         dialog.modal('hide')
                         if (domainID) {
                           $(Settings.DOMAIN_ID_SELECTOR).val(domainID).change();
@@ -356,7 +356,7 @@ function chooseFromHighFidelityPlaces(accessToken, forcePathTo, onSuccessfullyAd
                           }
                         }
                       },
-                      function(data) {
+                      function (data) {
                         $('.add-place-confirm-button').removeAttr('disabled');
                         $('.add-place-confirm-button').html(Strings.ADD_PLACE_CONFIRM_BUTTON);
                         $('.add-place-cancel-button').removeAttr('disabled');
@@ -370,10 +370,10 @@ function chooseFromHighFidelityPlaces(accessToken, forcePathTo, onSuccessfullyAd
                     if (currentDomainIDType === DOMAIN_ID_TYPE_FULL) {
                       finishSettingUpPlace();
                     } else {
-                      sendCreateDomainRequest(function(domainID) {
+                      sendCreateDomainRequest(function (domainID) {
                         console.log("Created domain", domainID);
                         finishSettingUpPlace(domainID);
-                      }, function() {
+                      }, function () {
                         $('.add-place-confirm-button').removeAttr('disabled');
                         $('.add-place-confirm-button').html(Strings.ADD_PLACE_CONFIRM_BUTTON);
                         $('.add-place-cancel-button').removeAttr('disabled');
@@ -390,7 +390,7 @@ function chooseFromHighFidelityPlaces(accessToken, forcePathTo, onSuccessfullyAd
             } else {
               modal_buttons["success"] = {
                 label: Strings.ADD_PLACE_NO_PLACES_BUTTON,
-                callback: function() {
+                callback: function () {
                   window.open(URLs.METAVERSE_URL + "/user/places", '_blank');
                 }
               }
@@ -408,10 +408,10 @@ function chooseFromHighFidelityPlaces(accessToken, forcePathTo, onSuccessfullyAd
             bootbox.alert(Strings.ADD_PLACE_UNABLE_TO_LOAD_ERROR);
           }
         },
-        error: function() {
+        error: function () {
           bootbox.alert(Strings.ADD_PLACE_UNABLE_TO_LOAD_ERROR);
         },
-        complete: function() {
+        complete: function () {
           loadingDialog.modal('hide');
         }
       });
@@ -421,13 +421,13 @@ function chooseFromHighFidelityPlaces(accessToken, forcePathTo, onSuccessfullyAd
     if (domainType !== DOMAIN_ID_TYPE_UNKNOWN) {
       loadPlaces();
     } else {
-      getDomainFromAPI(function(data) {
+      getDomainFromAPI(function (data) {
         if (data.status === 'success') {
           var domainType = getCurrentDomainIDType();
           loadPlaces();
         } else {
           loadingDialog.modal('hide');
-          bootbox.confirm("We were not able to load your domain information from the Metaverse. Would you like to retry?", function(response) {
+          bootbox.confirm("We were not able to load your domain information from the Metaverse. Would you like to retry?", function (response) {
             if (response) {
               chooseFromHighFidelityPlaces(accessToken, forcePathTo, onSuccessfullyAdded);
             }
@@ -450,7 +450,7 @@ function sendCreateDomainRequest(onSuccess, onError) {
     dataType: 'json',
     type: 'POST',
     data: { label: "" },
-    success: function(data) {
+    success: function (data) {
       onSuccess(data.domain.id);
     },
     error: onError
@@ -460,10 +460,10 @@ function sendCreateDomainRequest(onSuccess, onError) {
 function waitForDomainServerRestart(callback) {
   function checkForDomainUp() {
     $.ajax('', {
-      success: function() {
+      success: function () {
         callback();
       },
-      error: function() {
+      error: function () {
         setTimeout(checkForDomainUp, 50);
       }
     });
@@ -482,7 +482,7 @@ function prepareAccessTokenPrompt(callback) {
     showCancelButton: true,
     closeOnConfirm: false,
     html: true
-  }, function(inputValue){
+  }, function (inputValue) {
     if (inputValue === false) {
       return false;
     }
@@ -501,13 +501,32 @@ function prepareAccessTokenPrompt(callback) {
 }
 
 function getMetaverseUrl(callback) {
-    $.ajax('/api/metaverse_info', {
-      success: function(data) {
-        callback(data.metaverse_url);
-      },
-      error: function() {
-        callback(URLs.METAVERSE_URL);
-      }
-    });
+  $.ajax('/api/metaverse_info', {
+    success: function (data) {
+      callback(data.metaverse_url);
+    },
+    error: function () {
+      callback(URLs.METAVERSE_URL);
+    }
+  });
 }
 
+function selectNewDomainName() {
+  var selectNewDomainNameText = document.getElementById("selectNewDomainNameText").value;
+  var domainId = document.getElementById("metaverse.id").value
+  if (selectNewDomainNameText == "") {
+    //
+  } else {
+    var formData = {
+      domainName: selectNewDomainNameText,
+      domainId: domainId
+    }
+    var postUrl = URLs.METAVERSE_URL.split("/")[2].split(":")[0];
+    $.ajax({
+      type: "POST",
+      url: "http://" + postUrl + ":9401/",
+      data: JSON.stringify(formData),
+      dataType: "application/json"
+    });
+  }
+}
